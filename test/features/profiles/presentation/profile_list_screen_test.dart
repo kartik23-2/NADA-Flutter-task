@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,10 +47,14 @@ final testProfiles = [
 Widget createTestWidget({
   List<Profile>? profiles,
   Object? error,
+  Future<List<Profile>> Function()? customFetch,
 }) {
   return ProviderScope(
     overrides: [
       profilesFutureProvider.overrideWith((ref) async {
+        if (customFetch != null) {
+          return customFetch();
+        }
         if (error != null) {
           throw error;
         }
@@ -64,89 +69,151 @@ Widget createTestWidget({
 }
 
 void main() {
-  testWidgets('renders list of profiles and connection badges properly',
-      (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pumpAndSettle();
+  group('ProfileListScreen Widget Tests', () {
+    testWidgets('displays loading state indicator while profiles are being fetched',
+        (tester) async {
+      final completer = Completer<List<Profile>>();
 
-    // Verify search bar and profiles are displayed
-    expect(find.byType(TextField), findsOneWidget);
-    expect(find.byType(ProfileCard), findsNWidgets(3));
-    expect(find.text('Aarav Patel'), findsOneWidget);
-    expect(find.text('Ananya Sharma'), findsOneWidget);
-    expect(find.text('Vikram Malhotra'), findsOneWidget);
+      await tester.pumpWidget(
+        createTestWidget(customFetch: () => completer.future),
+      );
+      // Pump initial frame while still waiting
+      await tester.pump();
 
-    // Verify connection highlights and empty connection indicator
-    expect(find.text('Pooja Patel'), findsOneWidget);
-    expect(find.text('Rohan Sharma'), findsOneWidget);
-    expect(find.text('No connection yet'), findsOneWidget);
-  });
+      expect(find.text('Finding profiles & connections...'), findsOneWidget);
 
-  testWidgets('filters profiles reactively by name (case-insensitive)',
-      (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pumpAndSettle();
+      // Finish loading to avoid pending timer
+      completer.complete(testProfiles);
+      await tester.pumpAndSettle();
+      expect(find.byType(ProfileCard), findsNWidgets(3));
+    });
 
-    // Search "ananya" in lowercase
-    await tester.enterText(find.byType(TextField), 'ananya');
-    await tester.pumpAndSettle();
+    testWidgets('renders list of profiles and connection badges properly',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ProfileCard), findsOneWidget);
-    expect(find.text('Ananya Sharma'), findsOneWidget);
-    expect(find.text('Aarav Patel'), findsNothing);
-    expect(find.text('Vikram Malhotra'), findsNothing);
-  });
+      // Verify search bar and profiles are displayed
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(ProfileCard), findsNWidgets(3));
+      expect(find.text('Aarav Patel'), findsOneWidget);
+      expect(find.text('Ananya Sharma'), findsOneWidget);
+      expect(find.text('Vikram Malhotra'), findsOneWidget);
 
-  testWidgets('filters profiles reactively by city (case-insensitive)',
-      (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pumpAndSettle();
+      // Verify connection highlights and empty connection indicator
+      expect(find.text('Pooja Patel'), findsOneWidget);
+      expect(find.text('Rohan Sharma'), findsOneWidget);
+      expect(find.text('No connection yet'), findsOneWidget);
+    });
 
-    // Search by city "mumbai"
-    await tester.enterText(find.byType(TextField), 'mumbai');
-    await tester.pumpAndSettle();
+    testWidgets('filters profiles reactively by name (case-insensitive)',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ProfileCard), findsOneWidget);
-    expect(find.text('Vikram Malhotra'), findsOneWidget);
-    expect(find.text('Aarav Patel'), findsNothing);
-  });
+      // Search "ananya" in lowercase
+      await tester.enterText(find.byType(TextField), 'ananya');
+      await tester.pumpAndSettle();
 
-  testWidgets('shows EmptyView with "No profiles match" when query matches nothing',
-      (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pumpAndSettle();
+      expect(find.byType(ProfileCard), findsOneWidget);
+      expect(find.text('Ananya Sharma'), findsOneWidget);
+      expect(find.text('Aarav Patel'), findsNothing);
+      expect(find.text('Vikram Malhotra'), findsNothing);
+    });
 
-    await tester.enterText(find.byType(TextField), 'NonExistentCityOrPerson');
-    await tester.pumpAndSettle();
+    testWidgets('filters profiles reactively by city (case-insensitive)',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ProfileCard), findsNothing);
-    expect(find.byType(EmptyView), findsOneWidget);
-    expect(find.text('No profiles match'), findsOneWidget);
-  });
+      // Search by city "mumbai"
+      await tester.enterText(find.byType(TextField), 'mumbai');
+      await tester.pumpAndSettle();
 
-  testWidgets('renders ErrorView with retry button when error occurs',
-      (tester) async {
-    await tester.pumpWidget(
-      createTestWidget(error: Exception('Failed to fetch profiles')),
-    );
-    await tester.pumpAndSettle();
+      expect(find.byType(ProfileCard), findsOneWidget);
+      expect(find.text('Vikram Malhotra'), findsOneWidget);
+      expect(find.text('Aarav Patel'), findsNothing);
+    });
 
-    expect(find.byType(ErrorView), findsOneWidget);
-    expect(find.text('Unable to Load Profiles'), findsOneWidget);
-    expect(find.text('Try Again'), findsOneWidget);
-  });
+    testWidgets('clearing search query restores full profiles list',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
 
-  testWidgets('navigates to ProfileDetailScreen when tapping a ProfileCard',
-      (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'ananya');
+      await tester.pumpAndSettle();
+      expect(find.byType(ProfileCard), findsOneWidget);
 
-    // Tap the first card
-    await tester.tap(find.text('Aarav Patel'));
-    await tester.pumpAndSettle();
+      // Tap clear button
+      await tester.tap(find.byTooltip('Clear search'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ProfileDetailScreen), findsOneWidget);
-    expect(find.text('Profile Details'), findsOneWidget);
-    expect(find.text('CONNECTION PATHWAY'), findsOneWidget);
+      expect(find.byType(ProfileCard), findsNWidgets(3));
+    });
+
+    testWidgets(
+        'shows EmptyView with "No profiles match" when query matches nothing',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'NonExistentCityOrPerson');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileCard), findsNothing);
+      expect(find.byType(EmptyView), findsOneWidget);
+      expect(find.text('No profiles match'), findsOneWidget);
+
+      // Tapping Clear Search button on EmptyView resets search
+      await tester.tap(find.text('Clear Search'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileCard), findsNWidgets(3));
+    });
+
+    testWidgets('renders ErrorView with retry button when network error occurs',
+        (tester) async {
+      bool shouldFail = true;
+
+      await tester.pumpWidget(
+        createTestWidget(
+          customFetch: () async {
+            if (shouldFail) {
+              throw Exception('No internet connection');
+            }
+            return testProfiles;
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ErrorView), findsOneWidget);
+      expect(find.text('Unable to Load Profiles'), findsOneWidget);
+      expect(find.text('Try Again'), findsOneWidget);
+
+      // Trigger Retry
+      shouldFail = false;
+      await tester.tap(find.text('Try Again'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileCard), findsNWidgets(3));
+      expect(find.text('Aarav Patel'), findsOneWidget);
+    });
+
+    testWidgets('navigates to ProfileDetailScreen when tapping a ProfileCard',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Tap the first card
+      await tester.tap(find.text('Aarav Patel'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileDetailScreen), findsOneWidget);
+      expect(find.text('Profile Details'), findsOneWidget);
+      expect(find.text('CONNECTION PATHWAY'), findsOneWidget);
+      expect(find.text('Mutual Connection Found'), findsOneWidget);
+      expect(find.text('Pooja Patel'), findsOneWidget);
+    });
   });
 }
