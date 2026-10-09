@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../data/models/profile_model.dart';
 import '../widgets/connection_badge.dart';
 
-/// Screen 2: Friendzy-inspired Profile Details with prominent Connection Pathway.
+/// Screen 2: Friendzy-inspired Profile Details with prominent Connection Pathway
+/// and dating app vector assets.
 class ProfileDetailScreen extends StatelessWidget {
   final Profile profile;
 
@@ -11,6 +13,8 @@ class ProfileDetailScreen extends StatelessWidget {
     super.key,
     required this.profile,
   });
+
+  bool get isFemale => profile.gender.trim().toUpperCase() == 'F';
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +75,10 @@ class ProfileDetailScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Friendzy Story Ring Avatar
+          // Friendzy Story Ring Avatar with illustrated icon
           Container(
-            width: 92,
-            height: 92,
+            width: 96,
+            height: 96,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(
@@ -100,19 +104,22 @@ class ProfileDetailScreen extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(3),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.accentLight,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    profile.initials,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
-                      letterSpacing: 1.0,
+              child: ClipOval(
+                child: Image.asset(
+                  isFemale ? AppIcons.girl : AppIcons.boy,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => Container(
+                    color: AppColors.accentLight,
+                    child: Center(
+                      child: Text(
+                        profile.initials,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primary,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -142,15 +149,15 @@ class ProfileDetailScreen extends StatelessWidget {
             runSpacing: 8,
             children: [
               _buildCapsule(
-                icon: Icons.cake_outlined,
+                assetIcon: AppIcons.ageRange,
                 label: '${profile.age} years old',
               ),
               _buildCapsule(
-                icon: Icons.person_outline,
+                assetIcon: AppIcons.gender,
                 label: profile.genderDisplay,
               ),
               _buildCapsule(
-                icon: Icons.location_on_rounded,
+                assetIcon: AppIcons.location,
                 label: profile.city,
                 isHighlight: true,
               ),
@@ -171,10 +178,15 @@ class ProfileDetailScreen extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.stars_rounded,
-                    size: 15,
-                    color: AppColors.primary,
+                  Image.asset(
+                    AppIcons.superLike,
+                    width: 15,
+                    height: 15,
+                    errorBuilder: (_, _, _) => const Icon(
+                      Icons.stars_rounded,
+                      size: 15,
+                      color: AppColors.primary,
+                    ),
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -215,15 +227,21 @@ class ProfileDetailScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(7),
+                width: 32,
+                height: 32,
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: AppColors.accentLight,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
-                  Icons.favorite_rounded,
-                  size: 16,
-                  color: AppColors.primary,
+                child: Image.asset(
+                  AppIcons.match,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.favorite_rounded,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -269,15 +287,21 @@ class ProfileDetailScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(7),
+                width: 32,
+                height: 32,
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceVariant,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  size: 16,
-                  color: AppColors.deepPlum,
+                child: Image.asset(
+                  AppIcons.loveLetter,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    size: 16,
+                    color: AppColors.deepPlum,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -311,29 +335,29 @@ class ProfileDetailScreen extends StatelessWidget {
     final attributes = <_AttributeItem>[
       if (profile.profession != null)
         _AttributeItem(
-          icon: Icons.work_outline_rounded,
+          assetIcon: AppIcons.interests,
           label: 'Profession',
           value: profile.profession!,
         ),
       if (profile.education != null)
         _AttributeItem(
-          icon: Icons.school_outlined,
+          assetIcon: AppIcons.profile,
           label: 'Education',
           value: profile.education!,
         ),
       if (profile.community != null)
         _AttributeItem(
-          icon: Icons.diversity_3_outlined,
+          assetIcon: AppIcons.ring,
           label: 'Community',
           value: profile.community!,
         ),
       _AttributeItem(
-        icon: Icons.location_city_rounded,
+        assetIcon: AppIcons.location,
         label: 'City',
         value: profile.city,
       ),
       _AttributeItem(
-        icon: Icons.badge_outlined,
+        assetIcon: AppIcons.editInfo,
         label: 'Profile ID',
         value: '#${profile.id}',
       ),
@@ -359,15 +383,21 @@ class ProfileDetailScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(7),
+                width: 32,
+                height: 32,
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceVariant,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
-                  Icons.tune_rounded,
-                  size: 16,
-                  color: AppColors.deepPlum,
+                child: Image.asset(
+                  AppIcons.relationshipStatus,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.tune_rounded,
+                    size: 16,
+                    color: AppColors.deepPlum,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -396,10 +426,16 @@ class ProfileDetailScreen extends StatelessWidget {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    item.icon,
-                    size: 18,
-                    color: AppColors.textTertiary,
+                  Image.asset(
+                    item.assetIcon,
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) => const Icon(
+                      Icons.circle,
+                      size: 16,
+                      color: AppColors.textTertiary,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   SizedBox(
@@ -475,17 +511,23 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             );
           },
-          child: const Center(
+          child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: 18,
+                Image.asset(
+                  AppIcons.message,
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.send_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
-                SizedBox(width: 8),
-                Text(
+                const SizedBox(width: 8),
+                const Text(
                   'Say Hello',
                   style: TextStyle(
                     fontSize: 16,
@@ -503,7 +545,7 @@ class ProfileDetailScreen extends StatelessWidget {
   }
 
   Widget _buildCapsule({
-    required IconData icon,
+    required String assetIcon,
     required String label,
     bool isHighlight = false,
   }) {
@@ -518,10 +560,16 @@ class ProfileDetailScreen extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 14,
-            color: isHighlight ? AppColors.primary : AppColors.textSecondary,
+          Image.asset(
+            assetIcon,
+            width: 15,
+            height: 15,
+            fit: BoxFit.contain,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.circle,
+              size: 12,
+              color: isHighlight ? AppColors.primary : AppColors.textSecondary,
+            ),
           ),
           const SizedBox(width: 6),
           Text(
@@ -539,12 +587,12 @@ class ProfileDetailScreen extends StatelessWidget {
 }
 
 class _AttributeItem {
-  final IconData icon;
+  final String assetIcon;
   final String label;
   final String value;
 
   _AttributeItem({
-    required this.icon,
+    required this.assetIcon,
     required this.label,
     required this.value,
   });

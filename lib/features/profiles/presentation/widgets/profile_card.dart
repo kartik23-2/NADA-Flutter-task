@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../data/models/profile_model.dart';
 import 'connection_badge.dart';
 
-/// Friendzy-styled profile card component for matrimonial feed.
+/// Friendzy-styled profile card component using dating app vector assets.
 class ProfileCard extends StatelessWidget {
   final Profile profile;
   final VoidCallback? onTap;
@@ -13,6 +14,8 @@ class ProfileCard extends StatelessWidget {
     required this.profile,
     this.onTap,
   });
+
+  bool get isFemale => profile.gender.trim().toUpperCase() == 'F';
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +44,11 @@ class ProfileCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Row: Avatar with Friendzy story ring + Name & Demographic badges
+                // Top Row: Illustrated Avatar with Friendzy story ring + Name & Demographic badges
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Avatar with gradient border ring
+                    // Avatar with gradient border ring & illustrated profile icon
                     _buildAvatarRing(),
                     const SizedBox(width: 14),
 
@@ -78,22 +81,22 @@ class ProfileCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
 
-                          // Friendzy-styled capsule tags
+                          // Friendzy-styled capsule tags with dating app icons
                           Wrap(
                             spacing: 6,
                             runSpacing: 4,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               _buildPillTag(
-                                icon: Icons.cake_outlined,
+                                assetIcon: AppIcons.ageRange,
                                 text: '${profile.age} yrs',
                               ),
                               _buildPillTag(
-                                icon: Icons.person_outline,
+                                assetIcon: AppIcons.gender,
                                 text: profile.genderDisplay,
                               ),
                               _buildPillTag(
-                                icon: Icons.location_on_rounded,
+                                assetIcon: AppIcons.location,
                                 text: profile.city,
                                 isHighlight: true,
                               ),
@@ -134,10 +137,16 @@ class ProfileCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Icons.work_outline_rounded,
-                          size: 13,
-                          color: AppColors.textSecondary,
+                        Image.asset(
+                          AppIcons.interests,
+                          width: 14,
+                          height: 14,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const Icon(
+                            Icons.work_outline_rounded,
+                            size: 13,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(width: 6),
                         Flexible(
@@ -176,9 +185,9 @@ class ProfileCard extends StatelessWidget {
     return Container(
       width: 54,
       height: 54,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [
             AppColors.primary,
             AppColors.accent,
@@ -194,19 +203,22 @@ class ProfileCard extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.all(2),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.accentLight,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              profile.initials,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w800,
-                color: AppColors.primary,
-                letterSpacing: 0.5,
+        child: ClipOval(
+          child: Image.asset(
+            isFemale ? AppIcons.girl : AppIcons.boy,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => Container(
+              color: AppColors.accentLight,
+              child: Center(
+                child: Text(
+                  profile.initials,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ),
@@ -237,7 +249,7 @@ class ProfileCard extends StatelessWidget {
   }
 
   Widget _buildPillTag({
-    required IconData icon,
+    required String assetIcon,
     required String text,
     bool isHighlight = false,
   }) {
@@ -252,12 +264,18 @@ class ProfileCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 12,
-            color: isHighlight ? AppColors.primary : AppColors.textSecondary,
+          Image.asset(
+            assetIcon,
+            width: 13,
+            height: 13,
+            fit: BoxFit.contain,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.circle,
+              size: 10,
+              color: isHighlight ? AppColors.primary : AppColors.textSecondary,
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 5),
           Text(
             text,
             style: TextStyle(

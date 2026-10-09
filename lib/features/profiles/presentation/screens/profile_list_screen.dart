@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../providers/profile_providers.dart';
 import '../widgets/empty_view.dart';
 import '../widgets/error_view.dart';
@@ -8,7 +9,8 @@ import '../widgets/profile_card.dart';
 import '../widgets/search_bar_widget.dart';
 import 'profile_detail_screen.dart';
 
-/// Screen 1: Friendzy-inspired Profiles feed with live case-insensitive search.
+/// Screen 1: Friendzy-inspired Profiles feed with live case-insensitive search
+/// and dating app vector assets.
 class ProfileListScreen extends ConsumerWidget {
   const ProfileListScreen({super.key});
 
@@ -25,8 +27,8 @@ class ProfileListScreen extends ConsumerWidget {
         title: Row(
           children: [
             Container(
-              width: 42,
-              height: 42,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [AppColors.primary, AppColors.accent],
@@ -42,10 +44,15 @@ class ProfileListScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.favorite_rounded,
-                color: Colors.white,
-                size: 20,
+              padding: const EdgeInsets.all(7),
+              child: Image.asset(
+                AppIcons.datingApp,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => const Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -98,20 +105,37 @@ class ProfileListScreen extends ConsumerWidget {
             // Profiles List / States View
             Expanded(
               child: filteredProfilesAsync.when(
-                loading: () => const Center(
+                loading: () => Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(
-                        color: AppColors.primary,
-                        strokeWidth: 3,
+                      Container(
+                        width: 72,
+                        height: 72,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentLight,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.connectionHighlightBorder,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Image.asset(
+                          AppIcons.romantic,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const CircularProgressIndicator(
+                            color: AppColors.primary,
+                            strokeWidth: 3,
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 16),
-                      Text(
+                      const SizedBox(height: 18),
+                      const Text(
                         'Finding profiles & connections...',
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.textSecondary,
                         ),
                       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 
-/// Friendzy-styled connection badge prominently displaying mutual connection pathways.
+/// Friendzy-styled connection badge prominently displaying mutual connection pathways
+/// using illustrated dating app assets.
 class ConnectionBadge extends StatelessWidget {
   final String? connectionText;
   final bool isCompact;
@@ -29,7 +31,7 @@ class ConnectionBadge extends StatelessWidget {
 
   Widget _buildCompactBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.connectionHighlightBg,
         borderRadius: BorderRadius.circular(14),
@@ -42,15 +44,21 @@ class ConnectionBadge extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(5),
+            width: 28,
+            height: 28,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.favorite_rounded,
-              size: 13,
-              color: AppColors.primary,
+            padding: const EdgeInsets.all(3),
+            child: Image.asset(
+              AppIcons.match,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) => const Icon(
+                Icons.favorite_rounded,
+                size: 14,
+                color: AppColors.primary,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -99,34 +107,47 @@ class ConnectionBadge extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Visual two-node connection graphic inspired by Friendzy match screen
+          // Visual two-node connection graphic with illustrated match asset
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildConnectionNode(icon: Icons.person_rounded, isUser: true),
+              _buildConnectionNode(iconAsset: AppIcons.boy),
               Container(
-                width: 44,
+                width: 36,
                 height: 2,
                 color: AppColors.primaryLight.withValues(alpha: 0.6),
               ),
               Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.favorite_rounded,
-                  size: 14,
+                width: 42,
+                height: 42,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
                   color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  AppIcons.match,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.favorite_rounded,
+                    size: 18,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               Container(
-                width: 44,
+                width: 36,
                 height: 2,
                 color: AppColors.primaryLight.withValues(alpha: 0.6),
               ),
-              _buildConnectionNode(icon: Icons.diversity_1_rounded, isUser: false),
+              _buildConnectionNode(iconAsset: AppIcons.girl),
             ],
           ),
           const SizedBox(height: 14),
@@ -155,29 +176,34 @@ class ConnectionBadge extends StatelessWidget {
     );
   }
 
-  Widget _buildConnectionNode({required IconData icon, required bool isUser}) {
+  Widget _buildConnectionNode({required String iconAsset}) {
     return Container(
-      width: 38,
-      height: 38,
+      width: 42,
+      height: 42,
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isUser ? AppColors.deepPlum : AppColors.primary,
-          width: 2,
+          color: AppColors.primaryLight.withValues(alpha: 0.5),
+          width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.15),
+            color: AppColors.primary.withValues(alpha: 0.12),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Icon(
-        icon,
-        size: 18,
-        color: isUser ? AppColors.deepPlum : AppColors.primary,
+      child: Image.asset(
+        iconAsset,
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => const Icon(
+          Icons.person_rounded,
+          size: 20,
+          color: AppColors.deepPlum,
+        ),
       ),
     );
   }
@@ -199,10 +225,15 @@ class ConnectionBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.explore_outlined,
-            size: isCompact ? 14 : 16,
-            color: AppColors.textTertiary,
+          Image.asset(
+            AppIcons.searchForLove,
+            width: isCompact ? 16 : 18,
+            height: isCompact ? 16 : 18,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.explore_outlined,
+              size: isCompact ? 14 : 16,
+              color: AppColors.textTertiary,
+            ),
           ),
           const SizedBox(width: 6),
           const Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 
 /// Friendzy-styled error view displaying connection failures and retry button.
 class ErrorView extends StatelessWidget {
@@ -21,8 +22,8 @@ class ErrorView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 88,
+              height: 88,
               decoration: BoxDecoration(
                 color: AppColors.errorContainer.withValues(alpha: 0.6),
                 shape: BoxShape.circle,
@@ -31,10 +32,15 @@ class ErrorView extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              child: const Icon(
-                Icons.wifi_off_rounded,
-                size: 36,
-                color: AppColors.error,
+              padding: const EdgeInsets.all(16),
+              child: Image.asset(
+                AppIcons.brokenHeart,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => const Icon(
+                  Icons.wifi_off_rounded,
+                  size: 36,
+                  color: AppColors.error,
+                ),
               ),
             ),
             const SizedBox(height: 22),
@@ -66,6 +72,7 @@ class ErrorView extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.deepPlum,
                 foregroundColor: Colors.white,
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 26,
                   vertical: 14,

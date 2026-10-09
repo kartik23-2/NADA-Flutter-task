@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 
 /// Friendzy-styled empty state widget displayed when search matches nothing.
 class EmptyView extends StatelessWidget {
@@ -21,8 +22,8 @@ class EmptyView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 84,
-              height: 84,
+              width: 88,
+              height: 88,
               decoration: BoxDecoration(
                 color: AppColors.accentLight,
                 shape: BoxShape.circle,
@@ -31,10 +32,15 @@ class EmptyView extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              child: const Icon(
-                Icons.search_off_rounded,
-                size: 38,
-                color: AppColors.primary,
+              padding: const EdgeInsets.all(16),
+              child: Image.asset(
+                AppIcons.searchForLove,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => const Icon(
+                  Icons.search_off_rounded,
+                  size: 38,
+                  color: AppColors.primary,
+                ),
               ),
             ),
             const SizedBox(height: 22),
