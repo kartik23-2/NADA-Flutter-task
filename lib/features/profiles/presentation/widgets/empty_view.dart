@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 
-/// Empty state widget displayed when no profiles match search criteria.
+/// Friendzy-styled empty state widget displayed when search matches nothing.
 class EmptyView extends StatelessWidget {
   final String query;
   final VoidCallback? onClearSearch;
@@ -21,54 +21,60 @@ class EmptyView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 68,
-              height: 68,
+              width: 84,
+              height: 84,
               decoration: BoxDecoration(
-                color: AppColors.surfaceVariant,
+                color: AppColors.accentLight,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.connectionHighlightBorder,
+                  width: 2,
+                ),
               ),
               child: const Icon(
                 Icons.search_off_rounded,
-                size: 32,
-                color: AppColors.textTertiary,
+                size: 38,
+                color: AppColors.primary,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
             const Text(
               'No profiles match',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
+                letterSpacing: -0.3,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               query.isNotEmpty
-                  ? 'We couldn\'t find any profiles matching "$query". Try checking for typos or searching by city.'
-                  : 'No profiles available at this moment.',
+                  ? 'We couldn\'t find any profiles matching "$query". Try searching with another name or city.'
+                  : 'No verified profiles available right now.',
               style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
-                height: 1.4,
+                height: 1.45,
               ),
               textAlign: TextAlign.center,
             ),
             if (query.isNotEmpty && onClearSearch != null) ...[
-              const SizedBox(height: 20),
-              OutlinedButton.icon(
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
                 onPressed: onClearSearch,
                 icon: const Icon(Icons.close_rounded, size: 16),
                 label: const Text('Clear Search'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.primary),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.deepPlum,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 10,
+                    horizontal: 22,
+                    vertical: 12,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(24),
                   ),
                 ),
               ),

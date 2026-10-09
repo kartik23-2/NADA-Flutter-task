@@ -3,7 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../data/models/profile_model.dart';
 import '../widgets/connection_badge.dart';
 
-/// Screen displaying the complete profile attributes and prominent connection context.
+/// Screen 2: Friendzy-inspired Profile Details with prominent Connection Pathway.
 class ProfileDetailScreen extends StatelessWidget {
   final Profile profile;
 
@@ -19,29 +19,34 @@ class ProfileDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile Details'),
         elevation: 0,
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.background,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Hero Profile Header Card
+            // Friendzy Hero Profile Card
             _buildHeroHeader(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
             // Prominent Mutual Connection Banner
             _buildConnectionBanner(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
             // About Section (if present)
             if (profile.about != null && profile.about!.trim().isNotEmpty) ...[
               _buildAboutSection(context),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
             ],
 
             // Attributes and Background Details
             _buildDetailsCard(context),
+            const SizedBox(height: 20),
+
+            // Friendzy Action CTA Button
+            _buildBottomCta(context),
             const SizedBox(height: 24),
           ],
         ),
@@ -51,88 +56,103 @@ class ProfileDetailScreen extends StatelessWidget {
 
   Widget _buildHeroHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.deepPlum.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Column(
         children: [
-          // Initials Avatar
+          // Friendzy Story Ring Avatar
           Container(
-            width: 76,
-            height: 76,
+            width: 92,
+            height: 92,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
                 colors: [
-                  AppColors.primaryLight,
                   AppColors.primary,
+                  AppColors.accent,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.25),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+                  color: AppColors.primary.withValues(alpha: 0.3),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: Center(
-              child: Text(
-                profile.initials,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  letterSpacing: 1.0,
+            padding: const EdgeInsets.all(3.5),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(3),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.accentLight,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    profile.initials,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primary,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // Name (supports long multi-line names without overflow)
+          // Name
           Text(
             profile.name,
             style: const TextStyle(
               fontSize: 22,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
               height: 1.25,
+              letterSpacing: -0.3,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
 
-          // Age, Gender, City badges
+          // Demographic capsule tags
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 8,
             runSpacing: 8,
             children: [
-              _buildChip(
+              _buildCapsule(
                 icon: Icons.cake_outlined,
                 label: '${profile.age} years old',
               ),
-              _buildChip(
+              _buildCapsule(
                 icon: Icons.person_outline,
                 label: profile.genderDisplay,
               ),
-              _buildChip(
-                icon: Icons.location_on_outlined,
+              _buildCapsule(
+                icon: Icons.location_on_rounded,
                 label: profile.city,
-                highlight: true,
+                isHighlight: true,
               ),
             ],
           ),
@@ -140,29 +160,29 @@ class ProfileDetailScreen extends StatelessWidget {
           if (profile.degreeDisplay != null) ...[
             const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
                 color: AppColors.accentLight,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppColors.accent.withValues(alpha: 0.35),
+                  color: AppColors.primaryLight.withValues(alpha: 0.35),
                 ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.schema_rounded,
-                    size: 14,
-                    color: AppColors.connectionHighlightText,
+                    Icons.stars_rounded,
+                    size: 15,
+                    color: AppColors.primary,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     profile.degreeDisplay!,
                     style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.connectionHighlightText,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
@@ -178,32 +198,39 @@ class ProfileDetailScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.deepPlum.withValues(alpha: 0.03),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.accentLight,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.hub_rounded,
+                  Icons.favorite_rounded,
                   size: 16,
-                  color: AppColors.accent,
+                  color: AppColors.primary,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               const Text(
                 'CONNECTION PATHWAY',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
                   color: AppColors.textSecondary,
@@ -211,7 +238,7 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           ConnectionBadge(
             connectionText: profile.connectedThrough,
             isCompact: false,
@@ -223,11 +250,18 @@ class ProfileDetailScreen extends StatelessWidget {
 
   Widget _buildAboutSection(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.deepPlum.withValues(alpha: 0.03),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,22 +269,22 @@ class ProfileDetailScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceVariant,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.format_quote_rounded,
+                  Icons.chat_bubble_outline_rounded,
                   size: 16,
-                  color: AppColors.primary,
+                  color: AppColors.deepPlum,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               const Text(
                 'ABOUT',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
                   color: AppColors.textSecondary,
@@ -258,14 +292,14 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Text(
             profile.about!,
             style: const TextStyle(
               fontSize: 14.5,
               height: 1.55,
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -294,7 +328,7 @@ class ProfileDetailScreen extends StatelessWidget {
           value: profile.community!,
         ),
       _AttributeItem(
-        icon: Icons.location_city_outlined,
+        icon: Icons.location_city_rounded,
         label: 'City',
         value: profile.city,
       ),
@@ -306,11 +340,18 @@ class ProfileDetailScreen extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.deepPlum.withValues(alpha: 0.03),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,22 +359,22 @@ class ProfileDetailScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceVariant,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.info_outline_rounded,
+                  Icons.tune_rounded,
                   size: 16,
-                  color: AppColors.primary,
+                  color: AppColors.deepPlum,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               const Text(
-                'ADDITIONAL DETAILS',
+                'BACKGROUND & ATTRIBUTES',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
                   color: AppColors.textSecondary,
@@ -341,14 +382,14 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: attributes.length,
             separatorBuilder: (_, _) => const Divider(
               color: AppColors.divider,
-              height: 18,
+              height: 20,
             ),
             itemBuilder: (context, index) {
               final item = attributes[index];
@@ -367,7 +408,7 @@ class ProfileDetailScreen extends StatelessWidget {
                       item.label,
                       style: const TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         color: AppColors.textSecondary,
                       ),
                     ),
@@ -377,7 +418,7 @@ class ProfileDetailScreen extends StatelessWidget {
                       item.value,
                       style: const TextStyle(
                         fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
                         height: 1.3,
                       ),
@@ -392,18 +433,87 @@ class ProfileDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChip({
+  Widget _buildBottomCta(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 52,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        gradient: const LinearGradient(
+          colors: [
+            AppColors.primary,
+            AppColors.accent,
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.35),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(26),
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  profile.hasConnection
+                      ? 'Connection request queued via ${profile.connectedThrough}!'
+                      : 'Connection request sent to ${profile.name}!',
+                ),
+                backgroundColor: AppColors.deepPlum,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+          },
+          child: const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.send_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Say Hello',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCapsule({
     required IconData icon,
     required String label,
-    bool highlight = false,
+    bool isHighlight = false,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: highlight
-            ? AppColors.primaryLight.withValues(alpha: 0.08)
+        color: isHighlight
+            ? AppColors.primaryLight.withValues(alpha: 0.1)
             : AppColors.surfaceVariant,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -411,15 +521,15 @@ class ProfileDetailScreen extends StatelessWidget {
           Icon(
             icon,
             size: 14,
-            color: highlight ? AppColors.primary : AppColors.textSecondary,
+            color: isHighlight ? AppColors.primary : AppColors.textSecondary,
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 6),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: highlight ? FontWeight.w600 : FontWeight.w500,
-              color: highlight ? AppColors.primary : AppColors.textPrimary,
+              fontSize: 13,
+              fontWeight: isHighlight ? FontWeight.w700 : FontWeight.w600,
+              color: isHighlight ? AppColors.primary : AppColors.textPrimary,
             ),
           ),
         ],

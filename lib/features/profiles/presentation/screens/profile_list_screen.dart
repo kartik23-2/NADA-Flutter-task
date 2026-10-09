@@ -8,7 +8,7 @@ import '../widgets/profile_card.dart';
 import '../widgets/search_bar_widget.dart';
 import 'profile_detail_screen.dart';
 
-/// Screen 1: Profiles feed with live case-insensitive search and mutual connection highlights.
+/// Screen 1: Friendzy-inspired Profiles feed with live case-insensitive search.
 class ProfileListScreen extends ConsumerWidget {
   const ProfileListScreen({super.key});
 
@@ -20,30 +20,64 @@ class ProfileListScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        toolbarHeight: 70,
+        backgroundColor: AppColors.background,
+        title: Row(
           children: [
-            const Text(
-              'Nada Profiles',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.3,
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primary, AppColors.accent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.favorite_rounded,
+                color: Colors.white,
+                size: 20,
               ),
             ),
-            filteredProfilesAsync.maybeWhen(
-              data: (profiles) => Text(
-                activeQuery.isEmpty
-                    ? '${profiles.length} verified profiles'
-                    : '${profiles.length} result${profiles.length == 1 ? '' : 's'} found',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
-                ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Nada Profiles',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                      letterSpacing: -0.4,
+                    ),
+                  ),
+                  filteredProfilesAsync.maybeWhen(
+                    data: (profiles) => Text(
+                      activeQuery.isEmpty
+                          ? '${profiles.length} verified profiles'
+                          : '${profiles.length} result${profiles.length == 1 ? '' : 's'} found',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
+                  ),
+                ],
               ),
-              orElse: () => const SizedBox.shrink(),
             ),
           ],
         ),
@@ -51,14 +85,13 @@ class ProfileListScreen extends ConsumerWidget {
       body: RefreshIndicator(
         color: AppColors.primary,
         onRefresh: () async {
-          // Re-fetch profiles on pull-to-refresh
           return ref.refresh(profilesFutureProvider.future);
         },
         child: Column(
           children: [
             // Top Search Bar Section
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 6, 16, 12),
               child: const SearchBarWidget(),
             ),
 
@@ -78,7 +111,7 @@ class ProfileListScreen extends ConsumerWidget {
                         'Finding profiles & connections...',
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
                         ),
                       ),
@@ -104,9 +137,9 @@ class ProfileListScreen extends ConsumerWidget {
 
                   return ListView.separated(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
                     itemCount: profiles.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 14),
                     itemBuilder: (context, index) {
                       final profile = profiles[index];
                       return ProfileCard(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 
-/// Reusable error view displaying failure details and a prominent retry button.
+/// Friendzy-styled error view displaying connection failures and retry button.
 class ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
@@ -16,16 +16,20 @@ class ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 72,
-              height: 72,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
-                color: AppColors.errorContainer.withValues(alpha: 0.5),
+                color: AppColors.errorContainer.withValues(alpha: 0.6),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.2),
+                  width: 2,
+                ),
               ),
               child: const Icon(
                 Icons.wifi_off_rounded,
@@ -33,13 +37,14 @@ class ErrorView extends StatelessWidget {
                 color: AppColors.error,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
             const Text(
               'Unable to Load Profiles',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+                fontSize: 19,
+                fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
+                letterSpacing: -0.3,
               ),
               textAlign: TextAlign.center,
             ),
@@ -49,7 +54,7 @@ class ErrorView extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
-                height: 1.4,
+                height: 1.45,
               ),
               textAlign: TextAlign.center,
             ),
@@ -59,14 +64,14 @@ class ErrorView extends StatelessWidget {
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: AppColors.deepPlum,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                  horizontal: 26,
+                  vertical: 14,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(26),
                 ),
               ),
             ),

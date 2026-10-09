@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../providers/profile_providers.dart';
 
-/// Clean and responsive search bar widget bound to the [searchQueryProvider].
+/// Friendzy-styled capsule search bar bound to [searchQueryProvider].
 class SearchBarWidget extends ConsumerStatefulWidget {
   const SearchBarWidget({super.key});
 
@@ -41,7 +41,6 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
   Widget build(BuildContext context) {
     final query = ref.watch(searchQueryProvider);
 
-    // Keep controller in sync if provider is reset externally
     if (_controller.text != query) {
       _controller.value = _controller.value.copyWith(
         text: query,
@@ -52,12 +51,12 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: AppColors.deepPlum.withValues(alpha: 0.05),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -68,24 +67,32 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
         style: const TextStyle(
           fontSize: 15,
           color: AppColors.textPrimary,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
         decoration: InputDecoration(
           hintText: 'Search by name or city...',
           hintStyle: const TextStyle(
             color: AppColors.textTertiary,
             fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
-          prefixIcon: const Icon(
-            Icons.search_rounded,
-            color: AppColors.primary,
-            size: 22,
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 14, right: 10),
+            child: Icon(
+              Icons.search_rounded,
+              color: AppColors.primary,
+              size: 22,
+            ),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 46,
+            minHeight: 46,
           ),
           suffixIcon: query.isNotEmpty
               ? IconButton(
                   icon: const Icon(
-                    Icons.close_rounded,
-                    color: AppColors.textSecondary,
+                    Icons.cancel_rounded,
+                    color: AppColors.textTertiary,
                     size: 20,
                   ),
                   tooltip: 'Clear search',
@@ -95,19 +102,19 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
           filled: true,
           fillColor: AppColors.surface,
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
+            horizontal: 18,
             vertical: 14,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(28),
             borderSide: const BorderSide(color: AppColors.border),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(28),
             borderSide: const BorderSide(color: AppColors.border),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(28),
             borderSide: const BorderSide(
               color: AppColors.primary,
               width: 1.8,
