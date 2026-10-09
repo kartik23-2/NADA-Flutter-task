@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
-import 'features/profiles/presentation/screens/profile_list_screen.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
 
 /// Root Application Widget configuring theme and entrypoint
 class NadaApp extends StatelessWidget {
@@ -12,7 +12,7 @@ class NadaApp extends StatelessWidget {
       title: 'Nada Profiles',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const ProfileListScreen(),
+      home: const SplashScreen(),
     );
   }
 }
